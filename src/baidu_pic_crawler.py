@@ -15,16 +15,37 @@ if not os.path.exists(picDir):
 	os.mkdir(picDir)
 valid_type = ['.png', '.jpg', '.PNG', '.JPG', '.gif', '.GIF', '.jpeg', '.JPEG']
 
+def retriveUrl(keyWord='test',amount=20):
+	"""
+	利用关键字从百度图片下载对应图片链接
+	:param keyWord: 搜索关键字
+	:param amount: 搜索数量
+	:return:
+	"""
+	url_list = list()
+	NumPic = 60
+	baseUrl = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=' + keyWord + '&pn='
+	pattern = re.compile(r'\"objURL\":\"(.*?)\"')
+	for page in range(int(amount/NumPic)+1):
+		Url = baseUrl + str(page)
+		print('Fetching Url form Baidu pic')
+		try:
+			req = requests.get(Url).text
+		except:
+			print('This Baidu Pic Page cannot reach')
+			continue
+		url_list += pattern.findall(req)
+		time.sleep(0.5)
+	return url_list
+
 def retrivePic(raw_data,dir='temp',amount=20 , abs_dir = ''):
 	"""
 	从指定链接获取图片，并保持在指定位置,按照数字命名排序
-	input:
-	raw_data:图片链接或是图片链接的list，链接为str格式
-	amount:指定最大的下载数量
-	dir：文件保存相对路径，不填写放在temp中
-	abs_dir:文件保存绝对路径，填写取消dir
-	output:
-	None
+	:param raw_data: 图片链接或是图片链接的list，链接为str格式
+	:param dir: 文件保存相对路径，不填写放在temp中
+	:param amount: 指定最大的下载数量
+	:param abs_dir: 文件保存绝对路径，填写取消dir
+	:return:
 	"""
 	# Check the input
 	assert (type(dir) == str) and (type(amount) == int) and (type(raw_data) in (str, list))
@@ -82,10 +103,11 @@ def retrivePic(raw_data,dir='temp',amount=20 , abs_dir = ''):
 		if counter == amount:
 			print('Stop for reaching target amount')
 			return
-		time.sleep(1)
 	print('Stop. No More in list.')
 	os.chdir(picDir)
 
 
 if __name__ == "__main__":
-	retrivePic(r'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510391786539&di=926ce202c06fb99e0ee84aa932299389&imgtype=0&src=http%3A%2F%2Fb.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F2e2eb9389b504fc22c8f0986e5dde71191ef6d65.jpg')
+	url_list = retriveUrl(keyWord='豪车',amount=500)
+	retrivePic(raw_data=url_list,amount=len(url_list),dir='Good Car')
+
