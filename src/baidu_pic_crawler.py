@@ -45,7 +45,7 @@ def retrivePic(raw_data,dir='temp',amount=20 , abs_dir = ''):
 	:param dir: 文件保存相对路径，不填写放在temp中
 	:param amount: 指定最大的下载数量
 	:param abs_dir: 文件保存绝对路径，填写取消dir
-	:return:
+	:return:返回Url 的列表
 	"""
 	# Check the input
 	assert (type(dir) == str) and (type(amount) == int) and (type(raw_data) in (str, list))
@@ -99,10 +99,10 @@ def retrivePic(raw_data,dir='temp',amount=20 , abs_dir = ''):
 			print('img is downloaded!')
 		except :
 			print('Write File Failed')
-		counter += 1
 		if counter == amount:
 			print('Stop for reaching target amount')
 			return
+		counter += 1
 	print('Stop. No More in list.')
 	os.chdir(picDir)
 
