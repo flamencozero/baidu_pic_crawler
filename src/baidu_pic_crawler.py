@@ -24,7 +24,7 @@ def retriveUrl(keyWord='test',amount=20):
 	"""
 	url_list = list()
 	NumPic = 60
-	baseUrl = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=' + keyWord + '&pn='
+	baseUrl = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=' + keyWord + '&pn=' + str(int(amount/NumPic)*60)
 	pattern = re.compile(r'\"objURL\":\"(.*?)\"')
 	for page in range(int(amount/NumPic)+1):
 		Url = baseUrl + str(page)
